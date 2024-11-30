@@ -1,0 +1,198 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>Ad Reward Example</title>
+    <script src="//jagnaimsee.net/vignette.min.js" data-zone="8501723" data-sdk="show_8501723"></script>
+
+    <style>
+        /* Prevent text selection globally */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('your-image-url.jpg'); /* Replace with your background image URL */
+            background-size: cover; /* Resize the background image to cover the entire screen */
+            background-attachment: fixed; /* Keep the background fixed while scrolling */
+            background-position: center; /* Position the background in the center */
+            background-repeat: no-repeat; /* Ensure the background image doesn't repeat */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+            user-select: none; /* Disable text selection on the entire page */
+        }
+
+        /* Card for content */
+        .card {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 320px;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #28a745;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        p {
+            font-size: 14px;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        /* Status message styling */
+        .status-message {
+            display: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .telegram-btn {
+            background-color: #0088cc;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .telegram-btn:hover {
+            background-color: #0077b5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1></h1>
+        <button id="watchAdButton">​🇸​​🇭​​🇴​​🇼​ ​🇦​​🇩​​🇸​</button>
+
+        <p id="adCount">Ads Watched Today: 0</p>
+        <p id="userPoints">Your Points: 0</p>
+        <p id="lastVisitedDate">Last Visited: Not yet visited</p>
+
+        <div id="statusMessage" class="status-message"></div>
+
+        <a href="https://t.me/MdreamBoss" class="telegram-btn" target="_blank">​🇩​​🇪​​🇻​​🇪​​🇱​​🇴​​🇵​​🇪​​🇷​</a>
+        
+        <div class="footer">
+            <p>Powered by 𝐃𝐫𝐞𝐚𝐦 𝐁𝐨𝐬𝐬</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize or reset data
+        function initializeData() {
+            const currentDate = new Date().toISOString().split('T')[0]; // Get the current date
+            const storedDate = localStorage.getItem('lastVisitedDate');
+            if (storedDate !== currentDate) {
+                localStorage.setItem('adCount', 0); // Reset ad count for the new day
+                localStorage.setItem('lastVisitedDate', currentDate); // Set the current date as last visited
+            }
+
+            if (!localStorage.getItem('userPoints')) {
+                localStorage.setItem('userPoints', 0); // Initialize user points if not set
+            }
+
+            updateDisplay(); // Update all displayed data
+        }
+
+        // Update the displayed data on the page
+        function updateDisplay() {
+            const adCount = localStorage.getItem('adCount');
+            const userPoints = localStorage.getItem('userPoints');
+            const lastVisitedDate = localStorage.getItem('lastVisitedDate');
+
+            document.getElementById('adCount').textContent = `Ads Watched Today: ${adCount}`;
+            document.getElementById('userPoints').textContent = `Your Points: ${userPoints}`;
+            document.getElementById('lastVisitedDate').textContent = `Last Visited: ${lastVisitedDate}`;
+        }
+
+        // Show status message to the user
+        function showStatusMessage(message, type = 'success') {
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type === 'success' ? 'status-success' : 'status-error'}`;
+            statusMessage.style.display = 'block';
+            setTimeout(() => statusMessage.style.display = 'none', 3000);
+        }
+
+        // Reward the user after watching an ad
+        function rewardUser() {
+            let userPoints = parseInt(localStorage.getItem('userPoints'));
+            userPoints += 10; // Add 10 points
+            localStorage.setItem('userPoints', userPoints); // Store updated points
+            updateDisplay(); // Update points display
+            showStatusMessage(`You earned 10 points! Total points: ${userPoints}`); // Show message
+        }
+
+        // Increment the ad count for today
+        function incrementAdCount() {
+            let adCount = parseInt(localStorage.getItem('adCount'));
+            adCount++; // Increment ad count
+            localStorage.setItem('adCount', adCount); // Store updated ad count
+            updateDisplay(); // Update ad count display
+        }
+
+        // Show ad and reward the user
+        function showAdAndReward() {
+            show_8501723().then(() => {
+                rewardUser(); // Reward the user after watching the ad
+                incrementAdCount(); // Increment the ad count
+            }).catch((error) => {
+                console.error('Error displaying ad:', error);
+                showStatusMessage('Error displaying ad. Please try again later.', 'error'); // Show error message
+            });
+        }
+
+        // Event listener for the "Watch Ad & Earn Points" button
+        document.getElementById('watchAdButton').addEventListener('click', showAdAndReward);
+
+        // Initialize the data on page load
+        initializeData();
+    </script>
+
+</body>
+</html>
